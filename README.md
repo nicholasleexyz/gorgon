@@ -1,7 +1,7 @@
 # gorgon
 Generates random voronoi diagrams.
 
-![image](https://github.com/nicholasleexyz/gorgon/assets/129869926/3302e8ec-3e4e-4c8e-b24d-b7fc1bfc579f)
+![image](https://github.com/nicholasleexyz/gorgon/assets/129869926/c5bf5d7d-07e1-4855-8218-ee0db2695cb3)
 
 ## Build
 
