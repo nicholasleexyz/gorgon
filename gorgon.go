@@ -42,50 +42,39 @@ func main() {
 
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
 
-	// Colors are defined by Red, Green, Blue, Alpha uint8 values.
-	cyan := color.RGBA{100, 200, 200, 0xff}
-	grey := color.RGBA{127, 127, 127, 0xff}
 	rand.Seed(time.Now().UnixNano())
 
 	numcrds := 8
-	crds := []Cell{}
-
-	for i := 0; i < numcrds; i++ {
-		col := cyan
-		if i%2 == 0 {
-			col = color.RGBA{255, 255, 255, 0xff}
-		}
-
-		crd := Cell{randrange(0, column-1), randrange(0, row-1), col}
-		crds = append(crds, crd)
+	crds := [8]Cell{ // TODO: random color function
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 0, 0, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{0, 255, 0, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{0, 0, 255, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 255, 0, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{0, 255, 255, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 0, 255, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{127, 255, 127, 0xff}},
+		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 127, 127, 0xff}},
 	}
 
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-			img.Set(x, y, grey)
-		}
-	}
-
-	for x := 0; x < width; x++ {
-		for y := 0; y < height; y++ {
-			/*
-				pick n amount of random coordinates
-				for each pixel find the nearest of the random coords
-				profit?! :P
-				random number between a range
-				calculate the distance between two 2-dimensional coordinates
-			*/
 
 			// normalized x and y
 			nx := (x * column) / width
 			ny := (y * row) / height
 
-			for i := 0; i < numcrds; i++ {
-				crd := crds[i]
-				if nx == crd.x && ny == crd.y {
-					img.Set(x, y, crd.color)
+			min := distancefromcell(nx, ny, crds[0])
+			col := crds[0].color
+
+			for j := 1; j < numcrds; j++ {
+				dist := distancefromcell(nx, ny, crds[j])
+				if dist < min {
+					min = dist
+					col = crds[j].color
 				}
 			}
+
+			img.Set(x, y, col)
 		}
 	}
 
