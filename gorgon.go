@@ -9,25 +9,21 @@ import (
 	"time"
 )
 
-func randRange(min int, max int) int {
-	return rand.Intn(max-min+1) + min
-}
-
 type Coord struct {
 	x int
 	y int
 }
 
-func returnCoord(x int, y int) Coord {
-	return Coord{x, y}
+func randrange(min int, max int) int {
+	return rand.Intn(max-min+1) + min
 }
 
 func main() {
 	width := 512
 	height := 512
 
-	column := 16
-	row := 16
+	column := 128
+	row := 128
 
 	upLeft := image.Point{0, 0}
 	lowRight := image.Point{width, height}
@@ -39,33 +35,39 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	// Set color for each pixel.
+	numcrds := 8
+	crds := []Coord{}
+
+	for i := 0; i < numcrds; i++ {
+		crd := Coord{randrange(0, column-1), randrange(0, row-1)}
+		crds = append(crds, crd)
+	}
+
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-
+			img.Set(x, y, cyan)
+		}
+	}
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
 			/*
-
 				pick n amount of random coordinates
 				for each pixel find the nearest of the random coords
-
 				profit?! :P
-
 				random number between a range
 				calculate the distance between two 2-dimensional coordinates
-
 			*/
 
-			//normalized x and y could also be used with this
-
+			// normalized x and y
 			nx := (x * column) / width
 			ny := (y * row) / height
 
-			if nx%2 == ny%2 {
-				img.Set(x, y, cyan)
-			} else {
-				img.Set(x, y, color.White)
+			for i := 0; i < numcrds; i++ {
+				crd := crds[i]
+				if nx == crd.x && ny == crd.y {
+					img.Set(x, y, color.White)
+				}
 			}
-
 		}
 	}
 
