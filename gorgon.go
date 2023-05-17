@@ -34,8 +34,8 @@ func main() {
 	width := 512
 	height := 512
 
-	column := 128
-	row := 128
+	column := 512
+	row := 512
 
 	upLeft := image.Point{0, 0}
 	lowRight := image.Point{width, height}
