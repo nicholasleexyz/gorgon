@@ -16,6 +16,14 @@ type Cell struct {
 	color color.RGBA
 }
 
+func randColor() color.RGBA {
+	r := uint8(randrange(0, 256))
+	g := uint8(randrange(0, 256))
+	b := uint8(randrange(0, 256))
+	c := color.RGBA{r, g, b, 0xff}
+	return c
+}
+
 func randrange(min int, max int) int {
 	return rand.Intn(max-min+1) + min
 }
@@ -31,47 +39,39 @@ func distancefromcell(x int, y int, cell Cell) float64 {
 }
 
 func main() {
-	width := 512
-	height := 512
-
-	column := 512
-	row := 512
+	size := 512
+	unit := size / 8
 
 	upLeft := image.Point{0, 0}
-	lowRight := image.Point{width, height}
+	lowRight := image.Point{size, size}
 
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
 
 	rand.Seed(time.Now().UnixNano())
 
-	numcrds := 8
-	crds := [8]Cell{ // TODO: random color function
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 0, 0, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{0, 255, 0, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{0, 0, 255, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 255, 0, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{0, 255, 255, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 0, 255, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{127, 255, 127, 0xff}},
-		{randrange(0, column-1), randrange(0, row-1), color.RGBA{255, 127, 127, 0xff}},
+	crds := [64]Cell{}
+
+	for j := 0; j < 8; j++ {
+		for i := 0; i < 8; i++ {
+			crds[8*j+i] = Cell{i*unit + unit/2 + (randrange(-(unit / 2), unit/2)), j*unit + unit/2 + (randrange(-(unit / 2), unit/2)), randColor()}
+		}
 	}
 
-	for x := 0; x < width; x++ {
-		for y := 0; y < height; y++ {
-
-			// normalized x and y
-			nx := (x * column) / width
-			ny := (y * row) / height
-
-			min := distancefromcell(nx, ny, crds[0])
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
+			min := distancefromcell(x, y, crds[0])
 			col := crds[0].color
 
-			for j := 1; j < numcrds; j++ {
-				dist := distancefromcell(nx, ny, crds[j])
+			for j := 1; j < 64; j++ {
+				dist := distancefromcell(x, y, crds[j])
 				if dist < min {
 					min = dist
 					col = crds[j].color
 				}
+			}
+
+			if min < 5 {
+				col = color.RGBA{0, 0, 0, 0xff}
 			}
 
 			img.Set(x, y, col)
