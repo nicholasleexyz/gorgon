@@ -50,6 +50,22 @@ func distancefromcell(x int, y int, cell Cell) float64 {
 	return math.Sqrt(math.Pow((x2-x1), 2) + math.Pow((y2-y1), 2))
 }
 
+func magnitude(a1 float64, a2 float64) float64 {
+	return math.Sqrt(math.Pow(a1, 2) + math.Pow(a2, 2))
+}
+
+func normalize(a1 float64, a2 float64) (x float64, y float64) {
+	mag := magnitude(a1, a2)
+	if mag == 0 {
+		return a1, a2
+	}
+
+	return a1 / mag, a2 / mag
+}
+
+// func dotProduct(a1 float64, a2 float64, b1 float64, b2 float64) float64 {
+// }
+
 func offsetCoords(cells []Cell, xOffset int, yOffset int) []Cell {
 	crds := []Cell{}
 	for i := 0; i < 64; i++ {
@@ -76,7 +92,7 @@ func tileableCoords(cells []Cell, size int) []Cell {
 	}
 	arr := []Cell{}
 
-	for i := 0; i < 9; i++ {
+	for i := 0; i < len(tcrds); i++ {
 		arr = append(arr, tcrds[i]...)
 	}
 
