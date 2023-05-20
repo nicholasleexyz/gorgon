@@ -66,8 +66,20 @@ func Vector2Div(a Vector2, x float64) Vector2 {
 	return Vector2{a.x / x, a.y / x}
 }
 
-func dotProduct(ax float64, ay float64, bx float64, by float64) float64 {
-	return ax*bx + ay*ay
+func Vector2Mult(a Vector2, x float64) Vector2 {
+	return Vector2{a.x * x, a.y * x}
+}
+
+func Vector2Sub(a Vector2, b Vector2) Vector2 {
+	return Vector2{a.x - b.x, a.y - b.y}
+}
+
+func Vector2Add(a Vector2, b Vector2) Vector2 {
+	return Vector2{a.x + b.x, a.y + b.y}
+}
+
+func dotProduct(a Vector2, b Vector2) float64 {
+	return a.x*b.x + a.y*a.y
 }
 
 func offsetCoords(cells []Cell, xOffset int, yOffset int) []Cell {
@@ -134,7 +146,6 @@ func main() {
 
 	// closest := Vector2{tcrds[0].coords.x, tcrds[0].coords.y}
 	// lastclosest := Vector2{closest.x, closest.y}
-	// fmt.Println(tcrds)
 
 	for x := 0; x < size; x++ {
 		for y := 0; y < size; y++ {
@@ -145,39 +156,21 @@ func main() {
 			for j := 1; j < len(tcrds); j++ {
 				dist := distance(current, tcrds[j].coords)
 				if dist < min {
-					// current := tcrds[j]
 					min = dist
-					col = tcrds[j].color
+
+					current := tcrds[j]
+					col = current.color
 
 					// lastclosest = Vector2{closest.x, closest.y}
 					// closest = Vector2{current.coords.x, current.coords.y}
 				}
 			}
-
-			// vecToLastClosestX := lastclosest.x - closest.x
-			// vecToLastClosestY := lastclosest.y - closest.y
-			// vecToClosestX := closest.x - x
-			// vecToClosestY := closest.y - y
-
-			// differenceX := vecToClosestX - vecToLastClosestX
-			// differenceY := vecToClosestY - vecToLastClosestY
-
-			// differenceXn, differenceYn := normalize(float64(differenceX), float64(differenceY))
-			// centerX := float64(closest.x+lastclosest.x) * 0.5
-			// centerY := float64(closest.y+lastclosest.y) * 0.5
-			// vecPixToCenterX := centerX - float64(x)
-			// vecPixToCenterY := centerY - float64(y)
-			// vecClosestCellToCenterX := centerX - float64(closest.x)
-			// vecClosestCellToCenterY := centerY - float64(closest.y)
-
-			// vecPixToCenterXn, vecPixToCenterYn := normalize(vecPixToCenterX, vecPixToCenterY)
-			// vecClosestCellToCenterXn, vecClosestCellToCenterYn := normalize(vecClosestCellToCenterX, vecClosestCellToCenterY)
-			// dp := math.Abs(dotProduct(vecPixToCenterXn, vecPixToCenterYn, vecClosestCellToCenterXn, vecClosestCellToCenterYn))
-			// edgeDist := magnitude(vecClosestCellToCenterX*dp, vecClosestCellToCenterY*dp)
-
-			// vecToCenterXn, vecToCenterYn := normalize(vecToCenterX, vecToCenterY)
-			// edgeDist := dotProduct(vecToCenterXn, vecToCenterYn, differenceX, differenceY)
-			// dp := dotProduct(vecToCenterX, vecToCenterY, vecToLastClosestXn, vecToLastClosestYn)
+			// toLastClosest := Vector2Sub(lastclosest, closest)
+			// toClosest := Vector2Sub(closest, current)
+			// difference := Vector2Sub(toClosest, toLastClosest)
+			// center := Vector2Mult(Vector2Add(closest, lastclosest), 0.5)
+			// pixToCenter := Vector2Sub(center, current)
+			// dp := math.Abs(dotProduct(pixToCenter, difference))
 
 			if min < float64(margin) {
 				// || edgeDist < 0.5 { // draw a dot where the coord is
