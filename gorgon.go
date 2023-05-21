@@ -23,11 +23,10 @@ type Vector2 struct {
 type Cell struct {
 	coords Vector2Int
 	color  color.RGBA
-	// neighbors []Cell
 }
 
 func main() {
-	size := 512
+	size := 1024
 	unit := size / 8
 	margin := 5
 
@@ -41,11 +40,14 @@ func main() {
 	cells := createCellGrid(8, unit, margin)
 	tilableCells := tileableCoords(cells, 8, size)
 
+	var closest Cell
+	var secondClosest Cell
+
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
 			pixel := Vector2Int{x, y}
-			min := pixel.Distance(tilableCells[1][1].coords)
-			closest := tilableCells[1][1]
+
+			var min int = size
 
 			for y1 := 0; y1 < len(tilableCells); y1++ {
 				for x1 := 0; x1 < len(tilableCells[y1]); x1++ {
@@ -60,10 +62,45 @@ func main() {
 			}
 
 			img.Set(x, y, closest.color)
+		}
+	}
+
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			pixel := Vector2Int{x, y}
+			var min int = size
+
+			for y1 := 0; y1 < len(tilableCells); y1++ {
+				for x1 := 0; x1 < len(tilableCells[y1]); x1++ {
+					cell := tilableCells[y1][x1]
+					dist := pixel.Distance(cell.coords)
+
+					if dist < min {
+						min = dist
+						secondClosest = closest
+						closest = cell
+					}
+				}
+			}
 
 			// if pixel.Distance(closest.coords) < margin { // draw cell coord
 			// 	img.Set(x, y, color.RGBA{0, 0, 0, 0xff})
 			// }
+
+			center := closest.coords.Add(secondClosest.coords.Sub(closest.coords).Multiply(0.5))
+			// if pixel.Distance(center) < margin {
+			// 	img.Set(x, y, color.RGBA{127, 127, 127, 0xff})
+			// }
+
+			dirToSecondClosest := secondClosest.coords.Sub(closest.coords).toVector2().normalize()
+			pixelToCenter := center.Sub(pixel).toVector2()
+			dprod := pixelToCenter.Dot(dirToSecondClosest)
+			// fmt.Println(dprod)
+			if y*size+x > 100 {
+				if math.Abs(dprod) < 1 {
+					img.Set(x, y, color.RGBA{0, 0, 0, 0xff})
+				}
+			}
 		}
 	}
 
@@ -200,6 +237,12 @@ func (a Vector2) Dot(b Vector2) float64 {
 	by := b.y
 
 	dprod := (ax * bx) + (ay * by)
+
+	if dprod > 1 {
+		return 1
+	} else if dprod < -1 {
+		return -1
+	}
 
 	return dprod
 }
