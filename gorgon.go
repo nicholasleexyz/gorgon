@@ -94,9 +94,9 @@ func main() {
 
 			dirToSecondClosest := secondClosest.coords.Sub(closest.coords).toVector2().normalize()
 			pixelToCenter := center.Sub(pixel).toVector2()
-			dprod := pixelToCenter.Dot(dirToSecondClosest)
+			dprod := pixelToCenter.Dot(dirToSecondClosest.Multiply(0.15))
 
-			if dprod < 1 {
+			if dprod < 0.95 {
 				img.Set(x, y, color.RGBA{0, 0, 0, 0xff})
 			}
 		}
