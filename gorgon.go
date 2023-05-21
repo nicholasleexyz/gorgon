@@ -26,7 +26,7 @@ type Cell struct {
 }
 
 func main() {
-	size := 512
+	size := 2048
 	unit := size / 8
 	margin := 5
 
@@ -94,7 +94,7 @@ func main() {
 
 			dirToSecondClosest := secondClosest.coords.Sub(closest.coords).toVector2().normalize()
 			pixelToCenter := center.Sub(pixel).toVector2()
-			dprod := pixelToCenter.Dot(dirToSecondClosest.Multiply(0.15))
+			dprod := pixelToCenter.Dot(dirToSecondClosest.Multiply(0.05))
 
 			if dprod < 0.95 {
 				img.Set(x, y, color.RGBA{0, 0, 0, 0xff})
