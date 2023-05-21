@@ -26,7 +26,7 @@ type Cell struct {
 }
 
 func main() {
-	size := 1024
+	size := 512
 	unit := size / 8
 	margin := 5
 
@@ -95,11 +95,9 @@ func main() {
 			dirToSecondClosest := secondClosest.coords.Sub(closest.coords).toVector2().normalize()
 			pixelToCenter := center.Sub(pixel).toVector2()
 			dprod := pixelToCenter.Dot(dirToSecondClosest)
-			// fmt.Println(dprod)
-			if y*size+x > 100 {
-				if math.Abs(dprod) < 1 {
-					img.Set(x, y, color.RGBA{0, 0, 0, 0xff})
-				}
+
+			if dprod < 1 {
+				img.Set(x, y, color.RGBA{0, 0, 0, 0xff})
 			}
 		}
 	}
@@ -212,6 +210,11 @@ func (a Vector2Int) Multiply(x float64) Vector2Int {
 	ax := int(math.Round(float64(a.x) * x))
 	ay := int(math.Round(float64(a.y) * x))
 	return Vector2Int{ax, ay}
+}
+func (a Vector2) Multiply(x float64) Vector2 {
+	ax := a.x * x
+	ay := a.y * x
+	return Vector2{ax, ay}
 }
 
 func (a Vector2) Distance(b Vector2) float64 {
