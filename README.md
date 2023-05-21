@@ -22,3 +22,6 @@ Windows
 ```
 gorgon.exe
 ```
+## Notes
+
+May contain artifacts that become obvious when the image is tiled.
