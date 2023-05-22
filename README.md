@@ -24,6 +24,3 @@ Windows
 ```
 gorgon.exe
 ```
-## Notes
-
-Image generated can have artifacts around the edges that become obvious when tiled.
