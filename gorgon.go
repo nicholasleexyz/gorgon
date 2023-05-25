@@ -1,3 +1,11 @@
+/*
+	debug mode
+	draw the edges
+	toggle for offset
+	toggle for outline
+	toggle for debug mode
+*/
+
 package main
 
 import (
@@ -18,12 +26,20 @@ type Cell struct {
 	color  color.RGBA
 }
 
+type Map struct {
+	width  int
+	height int
+	pixels [][]color.Color
+}
+
 func main() {
+	// col := color.RGBA{0, 0, 0, 0xff}
+
 	size := 1024
 	unit := size / 8
 	margin := 10
 	drawCellCoord := false
-	drawGrid := false
+	drawGrid := true
 	lineWeight := 0.90 // smaller
 
 	upLeft := image.Point{0, 0}
